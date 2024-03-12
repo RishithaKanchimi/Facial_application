@@ -1,0 +1,120 @@
+<!-- users_list_details.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+
+        img.user-photo {
+            max-width: 100px;
+            max-height: 100px;
+            display: block;
+            margin: 0 auto;
+            cursor: pointer; /* Add cursor style to indicate it's clickable */
+        }
+
+        /* Define styles for the zoomed-in image */
+        .zoomed-img-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            text-align: center;
+        }
+
+        .zoomed-img {
+            max-width: 90%; /* Adjust as needed */
+            max-height: 90%; /* Adjust as needed */
+            margin-top: 5%; /* Adjust to center vertically */
+        }
+    </style>
+</head>
+<body>
+    <h1>User List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Registration_time</th>
+                <th>Photo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user_id, user_name, Registration_time, user_photo in user_list %}
+                <tr>
+                    <td>{{ user_id }}</td>
+                    <td>{{ user_name }}</td>
+                    <td>{{ Registration_time }}</td>
+                    <!-- Add onclick attribute to trigger the zoom function -->
+                    <td><img class="user-photo" src="data:image/png;base64,{{ user_photo }}" alt="{{ user_name }}'s Photo" onclick="zoomImage(this)"></td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">No users found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Container for the zoomed-in image -->
+    <div class="zoomed-img-container" id="zoomed-img-container">
+        <img class="zoomed-img" id="zoomed-img" src="" alt="Zoomed Image">
+    </div>
+
+    <!-- JavaScript to handle image zoom -->
+    <script>
+        // Function to display the zoomed-in image
+        function zoomImage(img) {
+            const zoomedImgContainer = document.getElementById('zoomed-img-container');
+            const zoomedImg = document.getElementById('zoomed-img');
+
+            // Set the source of the zoomed-in image
+            zoomedImg.src = img.src;
+
+            // Display the zoomed-in image container
+            zoomedImgContainer.style.display = 'block';
+
+            // Close the zoomed-in image when clicking outside of it
+            zoomedImgContainer.onclick = function () {
+                zoomedImgContainer.style.display = 'none';
+            };
+        }
+    </script>
+</body>
+</html>

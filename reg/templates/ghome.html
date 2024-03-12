@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+<script src="/static/capture_photo.js"></script>
+</head>
+<style>
+#video {
+    box-shadow: 0px 0px 7px #6f6f0c;
+    width: 320px;
+    height: 240px;
+	margin: 0px 57px;
+}
+canvas#canvas {
+width:320px;
+}
+img#photo{
+	width: 320px;
+    height: 240px;
+    position: absolute;
+    top: 0%;
+    left: 19%;
+	
+	}
+	.camTitle{
+	margin: 01px -79px 2px 55px;
+    text-align: center;
+	}
+	button#startbutton {
+    margin: 0px 153px;
+}
+button#refresh {
+    margin: 0px 153px;
+}
+</style>
+<body>
+{% include "header.html" %}
+
+    <div class="page-wrapper chiller-theme toggled">
+        <!-- sidebar-wrapper  -->
+        <main class="page-content">
+          <div class="container-fluid">
+      <!---************ Form Start*********-->
+			<h2 align='center' style='color:red;'>{{message}}</h2>
+			<h2 align='center' style='color:green;'>{{message1}}</h2>
+             
+
+<!--***************Form End***********-->
+
+
+
+
+
+
+<!---**************Data table End***********-->
+
+          </div>
+
+        </main>
+        <!-- page-content" -->
+      </div>
+      <!-- page-wrapper -->
+
+      
+</body>
+</html>
+<script>
+
+	$('form').submit(function () {debugger;
+
+		// Get the Login Name value and trim it
+
+		var image = $('#image_src').val();
+
+		if (image === '') {
+			alert('Please caputre candidate photo ');
+			return false;
+		}
+		
+		
+		$("#viewsubmit").attr("disabled", true);
+        
+	});
+
+	$(function () {
+		$('#startbutton').click(function () {
+			$('#photo').css("display", "block");
+				$('#photo').css("visibility", "visible");
+			$('#video').css("visibility", "hidden");
+			$('#canvas').css("display", "none");
+			$('.startbutton').hide();
+			$('.refresh').show();
+			$('.title h5').text("Captured Photo");
+			$('.leftThumb').addClass('lti');
+			$('.imgContainer1').removeClass('highlight');
+			$('.imgContainer1').css('padding', '20px');
+			// $('#ac-wrapper1').css('display', 'block');
+			$('.highlight').css('padding', '0px');
+			
+		})
+
+		$('.refresh').click(function () {
+			$('#photo').css("visibility", "hidden");
+			$('.startbutton').show();
+			$('.refresh').hide();
+			$('#video').css("visibility", "visible");
+			$('.title h5').text("Camera Feed");
+			$('.leftThumb').removeClass('lti');
+			$('.rightThumb').removeClass('rti');
+			$('#ac-wrapper1').css('display', 'none');
+			$('.imgContainer1').addClass('highlight');
+			$('#ac-wrapper4').css('display', 'none');
+			$('.btnSubmit').removeClass('submitBtn');
+			document.getElementById('candidatePhoto').value = "";
+			document.getElementById('image_src').value = "";
+		})
+
+		$('.leftThumbCapture').click(function() {
+			$('.imgContainer1').removeClass('highlight');
+			$('.rightThumb').addClass('rti');
+			$('.leftThumb').removeClass('lti');
+			$('#ac-wrapper1').css('display', 'none');
+			//   $('#ac-wrapper2').css('display', 'block');
+			//PopUp2();
+		})
+
+		$('.rightThumbCapture').click(function() {			
+			$('.rightThumb').removeClass('rti');
+			$('#ac-wrapper2').css('display', 'none');
+			$('.btnSubmit').addClass('submitBtn');
+			$('#ac-wrapper1').css('display', 'none');
+			$('.imgContainer1').removeClass('highlight');
+			//PopUp3();
+		})
+
+		$('.btnSubmit').click(function() {
+			$(this).removeClass('submitBtn');
+		})
+	});
+
+	$('.sev_check').click(function () {
+		$('.sev_check').not(this).prop('checked', false);
+	});
+	$("#callPhotoVerificationButton").click(function () {
+		$("html, body").animate({ scrollTop: 0 }, "slow");
+		return false;
+	});
+
+	/* $(document).ready(function () {
+
+        $("#resultsformsumbit").submit(function () {
+
+            //stop submitting the form to see the disabled button effect
+            //e.preventDefault();
+
+            //disable the submit button
+            $("#viewsubmit").attr("disabled", true);
+
+            return true;
+
+        });
+    });*/
+
+
+	
+	
+	$(window).on("load", function(){
+			$('[data-toggle="tooltip"]').tooltip('show');
+			setTimeout(function(){ $('[data-toggle="tooltip"]').tooltip('hide'); }, 3000);
+		});
+	
+		$('#startbutton').mouseover(function(){
+			$('[data-toggle="tooltip"]').tooltip('hide');
+		});
+		
+		$('.leftThumbCapture').mouseover(function(){
+			$('[data-toggle="tooltip1"]').tooltip('hide');
+		});
+
+		$('.rightThumbCapture').mouseover(function(){
+			$('[data-toggle="tooltip2"]').tooltip('hide');
+		});
+
+		$('#startbutton').on("click", function(){
+	
+			$('[data-toggle="tooltip1"]').tooltip().mouseover();
+			setTimeout(function(){ $('[data-toggle="tooltip1"]').tooltip('hide'); }, 2000);
+		})
+	
+		$('.leftThumbCapture').on("click", function(){
+			$('[data-toggle="tooltip1"]').tooltip('hide');
+			$('[data-toggle="tooltip2"]').tooltip().mouseover();
+			setTimeout(function(){ $('[data-toggle="tooltip2"]').tooltip('hide'); }, 2000);
+	})
+	
+		$('.rightThumbCapture').on("click", function(){
+			$('[data-toggle="tooltip2"]').tooltip('hide');
+			$('[data-toggle="tooltip3"]').tooltip().mouseover();
+			setTimeout(function(){ $('[data-toggle="tooltip3"]').tooltip('hide'); }, 2000);
+		})
+		
+	
+</script>

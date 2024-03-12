@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <!-- <link href="/static/css/login.css" rel="stylesheet"/> -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        table {
+            width: 65%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            padding: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 40px;
+           
+        }
+        
+        .user-photo, .user-image {
+            width: 150px; /* Set your desired width here */
+            height: auto; /* This will maintain the aspect ratio */
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px; /* You may have intended to set a pixel value like 20px */
+        }
+
+        /* Define styles for the zoomed-in image */
+        .zoomed-img-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            text-align: center;
+        }
+        h2 {
+            text-align: center;
+        }
+        .zoomed-img {
+            max-width: 90%; /* Adjust as needed */
+            max-height: 90%; /* Adjust as needed */
+            margin-top: 5%; /* Adjust to center vertically */
+        }
+        /* Calendar Input Styles */
+        .calendar-input {
+            width: 200px;
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .input-container {
+            margin-top: 50px;
+            margin-bottom: 20px; /* Add margin at the bottom for space */
+        }
+
+        /* Employee ID Input Styles */
+        #employee_id {
+            width: 200px;
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #download-pdf {
+            margin: 0 auto; /* Center the button and add margin left and right */
+            padding: 10px,20px; /* Remove padding */
+        }
+        
+      
+
+        .image-container img {
+            width: 10%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <!-- Include Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Include html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <h1>Attendance Report</h1>
+    
+    <form method="POST" action="{% url 'Attendence_report' %}">
+        {% csrf_token %}
+        <div>
+            <label for="employee_id">Enter Employee ID:</label>
+            <!-- <input type="text" name="employee_id" id="employee_id"> -->
+            <input type="text" name="employee_id" id="employee_id" value="{{ request.POST.employee_id }}">
+            
+            <!-- Calendar Input with Space -->
+            <label class="label" for="From_Date">From Date:</label>
+            <!-- <input type="date" name="From_Date" id="From_Date" class="calendar-input"> -->
+            <input type="date" name="From_Date" id="From_Date" class="calendar-input" value="{{ request.POST.From_Date }}">
+    
+            <!-- Calendar Input with Space -->
+            <label class="label" for="To_Date">To Date:</label>
+            <!-- <input type="date" name="To_Date" id="To_Date" class="calendar-input"> -->
+            <input type="date" name="To_Date" id="To_Date" class="calendar-input" value="{{ request.POST.To_Date }}">
+        </div>
+        <input type="submit" value="Submit">
+    </form>
+
+    
+        <div
+        class="container-fluid">
+        <div class="container p-3">
+            <div id="table-container" style="display: none; " class="mx-4 my-4">
+                <h2 style="text-align: center;">Verification Details</h2>
+                <div style="margin-left: 20px; margin-right: 20px;"></div>
+                <table class="table table-striped ">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Verified Time</th>
+                            <th>Organisation</th>
+                            <th>Registration Photo</th>
+                            <th >Verified Photo</th>
+                        </tr>
+                    </thead>
+
+        </div>
+        
+    
+            <tbody>
+                <!-- Populate this section with your table data -->
+                {% for employee_id, Name, verified_time, Organisation, photo_path, image_path in emp_report %}
+                <tr style="justify-content: center; align-self: center;"> 
+                    <td>{{ employee_id }}</td>
+                    <td>{{ Name }}</td>
+                    <td>{{ verified_time }}</td>
+                    <td>{{ Organisation }}</td>
+                    
+                        <div class="grid-container">
+                        <div class="user-photo">
+                            <td><img class="user-photo" src="data:image/png;base64,{{ photo_path }}" alt="{{ Name }}'s Photo Path" onclick="zoomImage(this)" ></td>
+                        </div>
+                        <div class="user-image">
+                            <td><img class="user-image" src="{{ image_path }}" alt="{{ Name }}'s Image Path" onclick="zoomImage(this)"></td>
+                        </div>
+                    </div>
+
+
+                    <!-- <td><img class="user-photo" src="data:image/png;base64,{{ photo_path }}" alt="{{ Name }}'s Photo Path" onclick="zoomImage(this)" ></td>
+                    <td><img class="user-image" src="{{ image_path }}" alt="{{ Name }}'s Image Path" onclick="zoomImage(this)"></td> -->
+                </div>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button id="download-pdf">Download as PDF</button>
+    </div>
+  
+      <!-- Container for the zoomed-in image -->
+    <div class="zoomed-img-container" id="zoomed-img-container">
+        <img class="zoomed-img" id="zoomed-img" src="" alt="Zoomed Image">
+    </div>
+    <script>
+        // JavaScript to show the table and handle PDF download
+        document.addEventListener("DOMContentLoaded", function () {
+            const tableContainer = document.getElementById("table-container");
+            const downloadPdfButton = document.getElementById("download-pdf");
+    
+            // Check if the table content is present (you can modify this condition based on how you display the table)
+            var empReportPresent = tableContainer.querySelector('tbody tr');
+    
+            if (empReportPresent) {
+                tableContainer.style.display = "block";
+            }
+
+            // Add a click event listener to the "Download as PDF" button
+            downloadPdfButton.addEventListener("click", function () {
+                // Hide the button after it's clicked
+                downloadPdfButton.style.display = "none";
+                // Convert the table to PDF using html2pdf.js
+
+                html2pdf()
+                    .from(tableContainer)
+                    
+                    .save();
+            });
+        });
+        // Function to display the zoomed-in image
+        function zoomImage(img) {
+            const zoomedImgContainer = document.getElementById('zoomed-img-container');
+            const zoomedImg = document.getElementById('zoomed-img');
+
+            // Set the source of the zoomed-in image
+            zoomedImg.src = img.src;
+
+            // Display the zoomed-in image container
+            zoomedImgContainer.style.display = 'block';
+
+            // Close the zoomed-in image when clicking outside of it
+            zoomedImgContainer.onclick = function () {
+            zoomedImgContainer.style.display = 'none';
+            };
+        }
+    </script>
+</body>
+</html>
+

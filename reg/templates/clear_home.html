@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+ {% include "header.html" %}
+    <!--Navbar Start-->
+ <div class="main" id="registration">
+      <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
+      <span class="hamb-top"></span>
+<span class="hamb-middle"></span>
+<span class="hamb-bottom"></span>
+  </button>
+ <div class="page-wrapper chiller-theme toggled">
+        <div class="clear_registration mainbg" >
+ <h5 class="text-center mb-4">EMPLOYEE DETAILS</h5>
+<div class="employee_id">
+   <label>Enter Employee ID: </label>
+   
+          <form action="{% url 'fetch_data'%}" method="POST"> {% csrf_token %}
+        <input class="form-control" autocomplete='off' name='rollno' id="rollno"  autofocus="autofocus"  />      
+    <div class="text-center">
+    <button type="submit" class="btn btn-primary submitBtn">Submit</button>
+	</form>
+	
+    </div>
+    </div>
+	<h3 style="text-align: center; color: red; font-weight: bold;">{{rollno}} </h3>
+			 <h3 style="text-align: center; color: green; font-weight: bold;">{{rollno1}} </h3>
+     <table id="clear_reg_table" class="table table-bordered">
+	 {% for item in datass %}
+    <thead>
+        <tr>
+            <th>Employee ID</th>
+            <th>Employee Name</th>
+            <th>Father Name</th>
+            <th>Crew Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td> {{item.0}}</td>
+            <td> {{item.1}}</td>
+            <td> {{item.2}}</td>
+            <td> {{item.4}}</td>
+        </tr>     
+    </tbody>
+	
+</table>
+
+</div>    
+<form action="{% url 'clear_data'%}" method="POST"> {% csrf_token %}
+				 <input type="hidden" name='rollno' class="form-control" value='{{item.0}}' autocomplete='off'>
+							 <div class="text-center">
+									<button type="submit" id='viewsubmit1' class="btn btn-primary mb-2">CLEAR</button>
+							</div>
+							</form>
+							{% endfor %}
+          <!----***************Footer start*********-->
+  </main>
+  </div>
+  </div>
+          <div class="clearfix"></div>
+       
+</body>
+</html>

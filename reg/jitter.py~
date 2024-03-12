@@ -1,0 +1,35 @@
+import sys
+
+import dlib
+
+def show_jittered_images(window, jittered_images):
+    '''
+        Shows the specified jittered images one by one
+    '''
+    for img in jittered_images:
+        window.set_image(img)
+        
+
+
+
+predictor_path ='/home/tgt/Documents/data'
+detector = dlib.get_frontal_face_detector()
+sp = dlib.shape_predictor(predictor_path)
+img = dlib.load_rgb_image(face_locations)
+dets = detector(img)
+num_faces = len(dets)
+faces = dlib.full_object_detections()
+for detection in dets:
+    faces.append(sp(img, detection))
+image = dlib.get_face_chip(img, faces[0], size=320)
+window = dlib.image_window()
+window.set_image(image)
+jittered_images = dlib.jitter_image(image, num_jitters=4)
+show_jittered_images(window, jittered_images)
+jittered_images = dlib.jitter_image(image, num_jitters=5, disturb_colors=True)
+#show_jittered_images(window, jittered_images)
+for a in jittered_images:
+    #random.randrange(1,5)
+    cv2.imshow('image',a)
+    cv2.waitKey(0)
+

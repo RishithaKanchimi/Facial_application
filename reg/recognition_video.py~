@@ -1,0 +1,88 @@
+from imutils.video import VideoStream
+import imutils
+import cv2,pickle
+from PIL import Image
+import face_recognition
+import datetime
+from datetime import date
+import numpy as np
+global keys
+keys = {}
+separator = "="
+keys = {}
+
+with open('reg/config.properties') as f:
+	for line in f:
+		if separator in line:
+			name, value = line.split(separator, 1)
+			keys[name.strip()] = value.strip()
+			
+
+
+def recognizer(base64_image):
+	data = pickle.loads(open(keys['encodings'], "rb").read())
+	data_names=pickle.loads(open(keys['encodings_name'],'rb').read())
+	#print(data)
+	vs = VideoStream(src=0).start()
+	while True:
+		frame = vs.read()
+		
+		rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+		r = frame.shape[1] / float(rgb.shape[1])
+		boxes = face_recognition.face_locations(rgb,model='hog')
+		encodings = face_recognition.face_encodings(rgb, boxes)
+		names = []
+		for encoding in encodings:
+		
+			matches = face_recognition.compare_faces(data["encodings"],
+			encoding,tolerance=0.4)
+			#print(matches)
+			name = "Unknown"
+			if True in matches:
+				matchedIdxs = [i for (i, b) in enumerate(matches) if b]
+				print("matchedIdxs......................",matchedIdxs)
+				counts = {}
+				for i in matchedIdxs:
+					name = data_names["usernames"][i]
+					counts[name] = counts.get(name, 0) + 1
+
+			
+				name = max(counts, key=counts.get)
+				print(name)
+			
+			names.append(name)
+			print(names)
+			for ((top, right, bottom, left), name) in zip(boxes, names):
+				print("the name is boxes...............",name)
+				
+				if name !="Unknown":
+					
+					
+					return name,'matched'
+				else:
+					
+					return name,'notmatched'
+				top = int(top * r)
+				right = int(right * r)
+				bottom = int(bottom * r)
+				left = int(left * r)
+				cv2.rectangle(frame, (left, top), (right, bottom),(0, 255, 0), 2)
+				y = top - 15 if top - 15 > 15 else top + 15
+				cv2.putText(frame, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX,0.75, (0, 255, 0), 2)	
+		cv2.namedWindow("Frame", cv2.WINDOW_NORMAL)
+		cv2.setWindowProperty("Frame", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)		
+		cv2.imshow("Frame", frame)
+		key=cv2.waitKey(1) & 0xFF
+		if key  ==ord('q'):
+			break
+		count +=1
+	
+
+			
+			
+cv2.destroyAllWindows()
+vs.stop()
+	
+	
+	
+	

@@ -1,0 +1,152 @@
+<div class="main" id="registration">
+    <div class="container-fluid">
+      <div class="responsive-video">  
+      <video
+        class="video-container"
+        id="video" style="outline:none; width:100%; height:auto; border-radius: 10px;" height="330" width="445" autoplay
+                  muted
+      ></video>
+      </div>
+      <div class="text-center mt-2 verified" style='display:none'>
+        <span style='font-size: 40px;'>Verified<i class="fa fa-check-circle" aria-hidden="true"></i></span>
+      </div>
+      <div class="text-center mt-2 facialerror" style='display:none'>
+        <span style='color:red;font-size: 40px;'>UNKNOWN<i class="fa fa-times-circle" style='color:red'
+            aria-hidden="true"></i></span>
+      </div>
+    </div>
+    </div>
+    <form method="POST" id='myForm' name='myForm'>{% csrf_token %}
+
+      <input type='hidden' name='image_detct' id="output">
+  
+    </form>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+    <script src="/static/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/static/js/face-api.min.js"></script>
+    <script>
+      const video = document.getElementById("video");
+      const isScreenSmall = window.matchMedia("(max-width: 700px)");
+
+      /****Loading the model ****/
+      Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri("/static/models")
+
+      ]).then(startVideo);
+
+      function startVideo() {
+        navigator.getUserMedia(
+          { video: {} },
+          stream => (video.srcObject = stream),
+          err => console.error(err)
+        );
+      }
+
+      /****Fixing the video with based on size size  ****/
+
+
+      //screenResize(isScreenSmall);
+      //isScreenSmall.addListener(screenResize);
+
+      /****Event Listeiner for the video****/
+      function remove() {
+        var main = document.getElementsByClassName("responsive-video")[0];
+        var length = main.children.length;
+        if (length == 3) {
+          main.removeChild(main.children[0]);
+        }
+      }
+      
+      video.addEventListener("playing", () => {
+        const canvas = faceapi.createCanvasFromMedia(video);
+        let container = document.querySelector(".responsive-video");
+        container.append(canvas);
+
+        //var widthscreen= window.screen.height;
+        //var hscreen = window.screen.width;
+        //console.log(widthscreen);
+        //console.log(hscreen);
+
+        //const displaySize= { width:window.innerWidth, height:window.innerHeight };
+        const displaySize = { width: video.width, height: video.height };
+        faceapi.matchDimensions(canvas, displaySize);
+        function face() {
+          canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+          // Draw the text message on the canvas
+          // canvas.getContext("2d").font = "20px Arial";
+          // canvas.getContext("2d").fillStyle = "Red";
+          // canvas.getContext("2d").fillText("Look at the camera", 20, 40);
+          let intervalTime = setInterval(async () => {
+            $(".verified").css("display", "none");
+            $("#tablemy").css("visibility", "hidden");
+            $(".facialerror").css("display", "none");
+            //$("canvas").css("display", "none");
+            const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
+            //const detections = await faceapi.detectSingleFace(video, options).withFaceLandmarks();
+            //console.log(leftEye)
+            canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+            if (detections == undefined) {
+              canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+            }
+            else {
+              const resizedDetections = faceapi.resizeResults(detections, displaySize);
+              //console.log("images        "+resizedDetections)
+
+
+              canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+              faceapi.draw.drawDetections(canvas, resizedDetections);
+              //console.log(drawDetections(canvas, resizedDetections))
+              //canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+              /****Drawing the detection box and landmarkes on canvas****/
+              const canvas1 = faceapi.createCanvasFromMedia(video);
+
+              var dataURL = canvas1.toDataURL()
+
+              //console.log(dataURL)
+              document.getElementById('output').value = dataURL;
+
+              clearTimeout(intervalTime);
+
+              //faceapi.draw.FaceLandmarks(canvas, resizedDetections);
+
+              submitform();
+            }
+          }, 3000);
+        }
+        face()
+        function submitform() {
+
+          //console.log(image_detct) 
+          $.ajax({
+            type: 'POST',
+            url: "{% url 'facial_submit' %}",
+            data: { image_detct: $('#output').val(), csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val() },
+
+            success: function (response) {
+              console.log(response)
+
+              //window.open("show_details?name="+response.name+"&e_id="+response.id+"","__self","width=900,height=500,scrollbars=yes,resizable=yes");
+              //window.open("show_details?name=" + response + "", "__self", "width=900,height=500,scrollbars=yes,resizable=yes");
+              var popup=window.open("show_details?name=" + response + "", "__self", "width=900,height=500,scrollbars=yes,resizable=yes");
+              setTimeout(function () {
+              if (popup && !popup.closed) {
+                  popup.close();
+              }
+              }, 10000);
+              setInterval(face(), 100);
+            },
+
+            error: function (response) {
+
+              console.log(response)
+
+            }
+          });
+
+        }
+      });
+
+	</script>
+
+</body>
+</html>

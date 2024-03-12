@@ -1,0 +1,301 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap');
+
+body{
+   font-family: 'Montserrat', sans-serif !important;
+}
+html, body{
+    height: 100vh;
+    margin: 0;
+}
+.register-form{
+    min-height: 100vh;
+    background: #e8ecd8;
+}
+.note
+{
+    text-align: center;
+    height: 60px;
+    font-size: 20px;
+    background: linear-gradient(to left, #33cccc 0%, #cccc00 100%);
+    color: #fff;
+    font-weight: bold;
+    line-height: 60px;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+.note p{
+	font-size:20px;
+}
+.rollNoBlock{
+    text-align: center;
+    margin-left: 25%;
+    margin-top: 20px;
+}
+.rollNoBlock label{
+    margin-right: -15px;
+    margin-top: 5px;
+    color:#60610a;
+}
+.rollNoBlock input{
+    color: #000;
+}
+.detailsBlock{
+    margin-top: 30px;
+}
+.detailsBlock table{
+    background: #f3f6fd !important;
+}
+.detailsBlock table tr td{
+    font-size: 16px;
+    padding:8px !important;
+    vertical-align: middle !important;
+}
+.detailsBlock table tr td p{
+    font-weight: bold;
+    margin-bottom: 0;
+   
+}
+.detailsBlock table tr td img{
+    height: 250px;
+    margin: 15px;
+    width: 200px;
+    vertical-align: top;
+   
+}
+.detailsBlock table tr td .signatureBlock p{
+    margin-top: 75px;
+    font-size: 18px;
+}
+.logOut{
+	float: right;
+    position: relative;
+    bottom: 40px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    cursor:pointer;
+}
+
+.checkBoxInfo {
+ 
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.checkBoxInfo1 {
+ 
+  position: relative;
+  padding-left: 10px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.mgnleft{
+	margin-left:50px;
+}
+.mgnleft1{
+	margin-left:30px;
+}
+
+/* Hide the browser's default checkbox */
+.checkBoxInfo input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.checkBoxInfo:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkBoxInfo input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkBoxInfo input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkBoxInfo .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.imageBlcok1{
+	
+	background: #f3f6fd ;
+	text-align:center;
+	display:block;
+	padding: 40px 180px 0px;
+}
+.mgn-top{
+	margin-top:40px;
+}
+.ct_center{
+	margin-top:40px;
+}
+.captureBtn{
+	margin-top:10px;
+}
+.captureBtn .btn-primary{
+	background-color: #97cc47;
+    border-color: #97cc47;
+    padding: 8px 25px;
+    width:150px;
+ 
+    font-weight: 600;
+} 
+.captureBtn .btn-primary:hover{
+	background-color: #97cc47;
+	border-color: #97cc47;
+	cursor:pointer;
+    font-weight: 600;
+}
+
+.captureBtn .btn-primary:focus{
+	background-color: #97cc47;
+	border-color: #97cc47;
+	cursor:pointer;
+}
+
+.captureBtn .btn-primary:active{
+	background-color: #97cc47 !important;
+	border-color: #97cc47;
+}
+.imageBlcok{
+	height:750px;
+	background: #f3f6fd ;
+	text-align:center;
+	display:block;
+	padding: 30px 50px;
+	margin-top:20px;
+}
+
+#loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 999;
+  border: 10px solid #131212;
+  border-radius: 50%;
+  border-top: 10px solid #35920f;
+  width:50px;
+  height: 50px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}
+
+#myDiv {
+  display: none;
+  text-align: center;
+}
+#myModal .close{
+	font-size:40px;
+}
+#myModal .modal-body p{
+    margin: 0;
+    font-size: 15px;
+}
+#myModal .modal-body #greenText{
+	color:green;
+	font-size: 20px;
+	font-weight:bold;
+}
+#myModal .modal-body #redText{
+	color:red;
+	font-size: 20px;
+	font-weight:bold;
+}
+#myModal{
+	top:30%;
+}
+#myModal .modal-body .modal-header{
+	padding:0;
+}
+#myModal .modal-footer{
+	padding:8px 8px 10px 8px;
+	text-align:center !important;
+}
+#myModal .modal-footer .btn-primary{
+	padding: 5px 40px;
+	font-size: 18px;
+}
+.modal-header{
+	padding: 25px !important;
+	border-bottom: 1px solid #e5e5e5;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	background: linear-gradient(to left, #33cccc 0%, #cccc00 100%);}
+.modal-backdrop.in {
+	opacity: 0.8;
+	background:#fff;
+}

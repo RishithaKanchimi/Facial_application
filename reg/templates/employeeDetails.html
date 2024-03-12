@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>title</title>
+ {% include "header.html" %}
+   
+  <script src="/static/capture_photo.js"></script>
+  </head>
+  <style>
+  video#video{
+  width: 100% !important;
+    margin: -1px 0px;
+	height:auto !important;
+   
+  }
+  img#photo{
+	width: 93.5%;
+    position: absolute;
+    top: 28px;
+	height: auto;
+	}
+  </style>
+  <body>
+
+
+
+
+
+  <div class="main" id="registration">
+      <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
+      <span class="hamb-top"></span>
+<span class="hamb-middle"></span>
+<span class="hamb-bottom"></span>
+  </button>
+  <h5 class="text-center mb-4">EMPLOYEE DETAILS</h5>
+    <div class="registration_page mainbg">
+    <div class="row">
+   <div class=" col-md-6">
+		<div>
+        <p class="text-center">Camera Feed</p>
+		</div>
+        <video id="video" style="outline:none; width:1000px; height:500px;"></video>
+								<canvas id="canvas" style="display: none;"></canvas>
+								<div>
+					<img name="capture_photo" id="photo" style="display: none;" />
+							<input type="hidden" id="candidatePhoto" value="" />
+					</div>			
+        <div class="text-center mt-2">
+       <button type="button" id="startbutton" class="btn btn-primary startbutton">Capture
+									Photo</button>
+		<button type="button" id="refresh" class="btn btn-primary refresh"
+									style="display: none;">Refresh</button>
+        </div>
+      </div>
+  <div class="col-md-6">
+ <table class="table table-bordered mt-4">
+       {% for item in rollno %}
+    <tbody>
+      <tr>
+        <td>Employee ID</td>
+      
+       <td> {{item.0}} </td>
+      </tr>
+      <tr>
+        <td>Employee Name</td>
+   
+       <td> {{item.1}} </td>
+      </tr>
+      <tr>
+        <td>Father Name</td>
+   
+        <td> {{item.2}} </td>
+      </tr>
+         <tr>
+        <td>Date of Birth</td>
+   
+        <td> {{item.10}} </td>
+      </tr>
+        <tr>
+        <td>Crew Type</td>
+   
+        <td> {{item.4}} </td>
+      </tr>
+    </tbody>
+  </table>
+   <div class="row mt-5">
+   <div class="mx-auto">
+
+	<form action="{% url 'candidate_photo'%}" method="POST">{% csrf_token %} 
+	  <button class="btn btn-primary backBtn"><a href={% url 'index' %} style='color: white;'>Back</a></button>
+	<input type="hidden" name="rollno" value="{{item.0}}" />
+							<input type="hidden" name="name" value="{{item.1}}" />
+						
+							<input type="hidden" name="image_src" id="image_src" value="" />
+  <button class="btn btn-primary submit_Btn">Submit</button>
+  </form>
+  </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endfor %}
+  
+
+<script> 
+
+$('form').submit(function () {debugger;
+
+		// Get the Login Name value and trim it
+
+		var image = $('#image_src').val();
+
+		if (image === '') {
+			alert('Please caputre candidate photo ');
+			return false;
+		}
+		
+		
+		$("#viewsubmit").attr("disabled", true);
+        
+	});
+
+
+	$(function () {
+		$('#startbutton').click(function () {debugger
+			$('#photo').css("display", "block");
+				$('#photo').css("visibility", "visible");
+			$('#video').css("visibility", "hidden");
+			$('#canvas').css("display", "none");
+			$('.startbutton').hide();
+			$('.refresh').show();
+			$('.title h5').text("Captured Photo");
+			$('.leftThumb').addClass('lti');
+			$('.imgContainer1').removeClass('highlight');
+			$('.imgContainer1').css('padding', '20px');
+			// $('#ac-wrapper1').css('display', 'block');
+			$('.highlight').css('padding', '0px');
+			
+		})
+
+		$('.refresh').click(function () {debugger
+			$('#photo').css("visibility", "hidden");
+			$('.startbutton').show();
+			$('.refresh').hide();
+			$('#video').css("visibility", "visible");
+			$('.title h5').text("Camera Feed");
+			$('.leftThumb').removeClass('lti');
+			$('.rightThumb').removeClass('rti');
+			$('#ac-wrapper1').css('display', 'none');
+			$('.imgContainer1').addClass('highlight');
+			$('#ac-wrapper4').css('display', 'none');
+			$('.btnSubmit').removeClass('submitBtn');
+			document.getElementById('candidatePhoto').value = "";
+			document.getElementById('image_src').value = "";
+		})
+	});
+
+
+
+
+</script> 
+</body>
+</head>
+</html>

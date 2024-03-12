@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+    {% include "header.html" %}
+  </head>
+  <body>
+  <div class="main" id="registration">
+      <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
+      <span class="hamb-top"></span>
+<span class="hamb-middle"></span>
+<span class="hamb-bottom"></span>
+  </button>
+  <h2 align='center' style='color:red;'>{{message}}</h2>
+ 
+  <div class="main mainbg" id="approve">
+  {% for item in rollno %}
+  <h5 class="text-center mb-4">EMPLOYEE DETAILS</h5>
+  
+  <div class="row no-gutters">
+    <div class="col-md-7">
+    <div class="row">
+      <div class="registered col-md-6 no-gutters">
+        <p class="text-center">Registered Photo</p>
+       <img src="{{reg_photo}}" class="img-bg" alt="image not found" />
+      </div>
+      <div class="verified col-md-6 no-gutters">
+        <p class="text-center">Verified Photo</p>
+        <img src="{{apporve_image}}" class="img-bg" alt="image not found" />
+     </div>
+     </div>
+	 
+    <table class="table table-bordered mt-4">
+      
+    <tbody>
+      <tr>
+        <td>Employee ID</td>
+      
+         <td>{{item.1}}</td>
+                      </tr>
+                      <tr>
+                        <td>Name :</td>
+                        <td>{{item.2}}</td>
+                      </tr>
+                      <tr>
+                        <td>Verified Time :</td>
+                        <td>{{item.5|date:"d-m-Y h:i a"}}</td>
+                      </tr>
+					   <tr>
+                        <td>Last Approved Time :</td>
+                       
+								{% if hour == 1 %}
+								<td style='color:red'>{{dattime|date:"d-m-Y h:i a"}}{{entry}}</td>
+								{% endif %}
+								{% if hour == 0 %}
+								<td style='color:green' >{{dattime|date:"d-m-Y h:i a"}}{{entry}}</td>
+								{% endif %}
+								<input type='hidden' name='entry' id='entry' value='{{entry}}' />
+                      </tr>
+    </tbody>
+  </table>
+    </div>
+    <div class="col-md-5">
+    <form action="{% url 'app_submit'%}" id="approve_form" method="POST"> {% csrf_token %}
+	 <input type="hidden"  name='f_id' value= "{{item.0}}" />
+			  <input type="hidden" id='gri_user'  name='gri_user' value= "{{item.7}}" />
+				<input type="hidden" id="empid" name='empid' value= "{{item.1}}" />
+				<input type="hidden" id="photopath" name='photopath' value= "/static/results/{{item.4}}" />
+    <div class="row no-gutters">
+      <div class="form-check-inline col-md-8">
+      <label class="form-check-label">
+        <input type="radio" class="form-check-input" id="remark" name="remark" value="1" required>Approve
+      </label>
+    </div>
+    <div class="form-check-inline col-md-4">
+      <label class="form-check-label">
+        <input type="radio" class="form-check-input" id="remark1" name="remark" value="0" required>Ignore
+      </label>
+    </div>
+    </div>
+	 <div class="radioButtonBlock checkinBlock" style='display:none'>
+    <div class="row second no-gutters">
+    <div class="form-check-inline col-md-8">
+      <label class="form-check-label">
+        <input type="radio" class="form-check-input" id="customRadio11" name="time" value="checkIn">Check-In
+      </label>
+    </div>
+    <div class="form-check-inline col-md-4">
+      <label class="form-check-label">
+        <input type="radio" class="form-check-input" id="customRadio12" name="time" value="checkOut">Check-Out
+      </label>
+    </div>
+    
+   
+    </div>
+    <div class="form-group remark">
+  <label for="comment">Remark:</label>
+  <textarea class="form-control" rows="5" id="comment" name="remarktext"></textarea>
+</div>
+ </div>
+ <div class="col-sm-12" id='tablemy'>
+                  
+                  </div>
+  <div class="text-center submit">
+    <button type="submit" class="btn btn-primary submitBtn">Submit</button>
+   </div> 
+    </form>
+    </div>
+    </div>
+	{% endfor %}
+  </div>
+
+      </div>
+      </div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/static/js/script.js"></script>
+<script>
+
+
+$('form').submit(function () {debugger;
+
+		// Get the Login Name value and trim it
+
+		var id = $('#empid').val();
+		var remark = $('input[name="remark"]:checked').val()
+		
+        if (remark == '1'){
+		   remarks='Approve'
+		}
+		if (remark == '0'){
+		   remarks='Igonre'
+		}
+		
+			alert('Employee id :- '+id+' have been '+remarks);
+			
+		
+		//return false
+		$("#viewsubmit").attr("disabled", true);
+        
+	});
+	$('#remark').change(function (e) {debugger;
+			$("#customRadio11").prop('required',true);
+			$("#customRadio12").prop('required',true);
+		$(".checkinBlock").css("display", "block");
+			//e.preventDefault();
+		})
+		$('#remark1').change(function (e) {debugger;
+			$("#customRadio11").prop('required',false);
+			$("#customRadio12").prop('required',false);
+		$(".checkinBlock").css("display", "none");
+			//e.preventDefault();
+		})	
+		$('#customRadio11').change(function (e) {debugger;
+			
+			
+			var gri_user = $('input[name="gri_user"]').val()
+			if(gri_user == 1){
+			var checkIn = 'checkOut'
+			}else{
+			var checkIn = $('input[name="time"]:checked').val()
+			}
+			var f_id = $('input[name="f_id"]').val()
+			var empid = $('input[name="empid"]').val()
+			var enrry = $('#entry').val();
+			if(checkIn == enrry){debugger;
+			$(".submit").css("display", "none");
+			document.getElementById("tablemy").innerHTML ="<span style='color: red;'>Employee previous attadence also checkIn.kindly add grievance <a href={% url 'ghome1'%}?empid="+empid+"&checkOut=checkOut&id="+f_id+">click here</a></span>"
+			}else{
+			$(".submit").css("display", "block");
+			document.getElementById("tablemy").innerHTML=''
+			}
+		})
+		$('#customRadio12').change(function (e) {debugger;
+			var gri_user = $('input[name="gri_user"]').val()
+			if(gri_user == 1){
+			var checkIn = 'checkIn'
+			}else{
+			var checkIn = $('input[name="time"]:checked').val()
+			}
+			var f_id = $('input[name="f_id"]').val()
+			var empid = $('input[name="empid"]').val()
+			var enrry = $('#entry').val();
+			if(checkIn == enrry){debugger;
+			$(".submit").css("display", "none");
+			document.getElementById("tablemy").innerHTML ="<span style='color: red;'>Employee previous attadence also checkout.kindly add grievance <a href={% url 'ghome1'%}?empid="+empid+"&checkOut=checkIn&id="+f_id+">click here</a></span>"
+			}else{
+			$(".submit").css("display", "block");
+			document.getElementById("tablemy").innerHTML=''
+			}
+		})		
+/*$(document).bind("contextmenu",function(e) {
+ e.preventDefault();
+});
+$(document).keydown(function(e){
+    if(e.which === 123){
+       return false;
+    }
+});	*/	
+	</script>
+  </body>
+</html>

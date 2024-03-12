@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/static/css/style.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css" type="text/css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;500&display=swap" rel="stylesheet">
+
+  <script src="https://ajax.googleapis.com/a jax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        body {
+            background: url("../static/images/Slide\ 16_9\ -\ 663.jpg") center center no-repeat;
+            background-size: cover;
+        }
+
+        h5 {
+            color: #f05537;
+        }
+        .main-background {
+            height: 1000px;
+            /* Adjust the height as needed */
+            /* background-image: url("../static/images/Slide\ 16_9\ -\ 663.jpg"); */
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%; /* This ensures the container takes the full height of the parent */
+        }
+        .circular-container {
+            width: 200px; /* Adjust the size of the circular container */
+            height: 200px; /* Adjust the size of the circular container */
+            background-color: aquamarine;
+            border: 5px solid green;
+            border-radius: 50%; /* Makes it circular */
+            overflow: hidden;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .container-fluid2{
+
+            float: right;
+        }
+        
+        /* Add the styles from your first snippet here */
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 25px;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-align: start;
+        }
+
+        /* Add other styles as needed */
+    </style>
+</head>
+
+<body onload="go()">
+    <div class="main-background">
+        <div class="container-fluid">
+            <!-- Your content here -->
+            <div class="container-fluid2">
+            <p style="display:none" id="data">{{data}}</p>
+            
+            <div class="col-sm-12 "id="details">
+                <!-- Rest of your content here -->
+            </div>
+            <ul id="navigation">
+                {% for item in list %}
+                <li>{{ item.emp_name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+
+    <script>
+        function go() {
+            var arr = document.getElementById("data").innerHTML;
+     var arr2  = JSON.parse(arr);
+arr2.forEach(iterate)
+function iterate(element)
+{
+
+
+ var element1 = document.createElement("div");
+ var element2 = document.createElement("div");
+ 
+ var heading1 = document.createElement("h6");
+ var heading2 = document.createElement("h6");
+ var heading3 = document.createElement("h6");
+ var heading4 = document.createElement("h6");
+ var heading5 = document.createElement("h6");
+ var textNode1 = document.createTextNode("NAME :"+element.name);
+ var textNode2 = document.createTextNode("ID :"+element.id);
+ var textNode3 = document.createTextNode("DATE :"+element.date);
+ var textNode4 = document.createTextNode("TIME :"+element.time);
+ var textNode5 = document.createTextNode("RESULT :"+element.result)
+ 
+ if(element.result=="VERIFIED")
+ {
+   heading5.style.color = "green";
+ }
+ else
+ {
+  heading5.style.color = "red";
+ }
+ var img = document.createElement("img");
+ img.src = element.photo;
+
+ //alert(element.photo);
+ element2.appendChild(img);
+ heading1.appendChild(textNode1);
+ heading1.style.fontSize = "23px";
+ heading2.appendChild(textNode2);
+ heading2.style.fontSize = "23px";
+ heading3.appendChild(textNode3);
+ heading3.style.fontSize = "23px";
+ heading4.appendChild(textNode4);
+ heading4.style.fontSize = "23px";
+ heading5.appendChild(textNode5);
+ heading5.style.fontSize = "23px";
+ element1.appendChild(heading1);
+ element1.appendChild(heading2);
+ element1.appendChild(heading3);
+ element1.appendChild(heading4);
+ element1.appendChild(heading5);
+ 
+//  element1.setAttribute("class" , "col-sm-8");
+//  element2.setAttribute("class" , "col-sm-5");
+ document.getElementById("details").appendChild(element2);
+ document.getElementById("details").appendChild(element1);
+
+  
+}  
+   
+}
+        
+    </script>
+</body>
+
+</html>

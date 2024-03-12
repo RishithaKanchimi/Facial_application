@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Report</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .user-photo, .user-image {
+            width: 50px; /* Set your desired width here */
+            height: auto; /* This will maintain the aspect ratio */
+        }
+
+        /* Calendar Input Styles */
+        .calendar-input {
+            width: 200px;
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .input-container {
+            margin-top: 20px;
+            margin-bottom: 20px; /* Add margin at the bottom for space */
+        }
+
+        /* Employee ID Input Styles */
+        #employee_id {
+            width: 200px;
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+    <!-- Include Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <h1>Attendance Report</h1>
+    
+
+    <form method="POST" action="{% url 'Attendence_report' %}">
+        {% csrf_token %}
+        <div>
+       
+    <label for="employee_id">Enter Employee ID:</label>
+    <!-- <input type="text" name="employee_id" id="employee_id"> -->
+    <input type="text" name="employee_id" id="employee_id" value="{{ request.POST.employee_id }}">
+    
+    <!-- Calendar Input with Space -->
+     
+        <label class="label" for="From_Date">From Date:</label>
+        <!-- <input type="date" name="From_Date" id="From_Date" class="calendar-input"> -->
+        <input type="date" name="From_Date" id="From_Date" class="calendar-input" value="{{ request.POST.From_Date }}">
+
+   
+
+    <!-- Calendar Input with Space -->
+     
+        <label class="label" for="To_Date">To Date:</label>
+        <!-- <input type="date" name="To_Date" id="To_Date" class="calendar-input"> -->
+        <input type="date" name="To_Date" id="To_Date" class="calendar-input" value="{{ request.POST.To_Date }}">
+
+    
+    </div>
+
+
+        <input type="submit" value="Submit">
+    </form>
+    
+    {% if emp_report %}
+    <h2>Employee Details</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Registration_time</th>
+                <th>Login Time</th>
+                <th>Logout Time</th>
+                <th>Organisation</th>
+                <th>Registration Photo</th>
+                <th>Verified Photo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee_id, Name, reg_time, login_time, logout_time, Organisation, photo_path, image_path in emp_report %}
+            <tr>
+                <td>{{ employee_id }}</td>
+                <td>{{ Name }}</td>
+                <td>{{ reg_time }}</td>
+                <td>{{ login_time }}</td>
+                <td>{{ logout_time }}</td>
+                <td>{{ Organisation }}</td>
+                <td><img class="user-photo" src="data:image/png;base64,{{ photo_path }}" alt="{{ Name }}'s Photo Path"></td>
+                <td><img class="user-image" src="{{ image_path }}" alt="{{ Name }}'s Image Path"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</body>
+</html>

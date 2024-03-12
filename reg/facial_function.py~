@@ -1,0 +1,134 @@
+import cv2,pickle,face_recognition,base64,io,time
+import numpy as np
+from PIL import Image
+from keras.preprocessing.image import img_to_array
+from keras.models import load_model
+import tensorflow as tf
+graph = tf.get_default_graph()
+
+global keys
+keys = {}
+separator = "="
+keys = {}
+
+
+with open('reg/config.properties') as f:
+	for line in f:
+		if separator in line:
+			name, value = line.split(separator, 1)
+			keys[name.strip()] = value.strip()
+			
+model = load_model(keys["liveness_model"])
+#print(model)
+le = pickle.loads(open(keys["liveness_pickel"], "rb").read())
+
+def recognizer(base64_image):
+	#time.sleep(0.02)
+	data = pickle.loads(open(keys['encodings'], "rb").read())
+	base64_image=base64_image.split(',')[-1]
+	base64_image=base64_image.replace(" ", "+")
+	image = cv2.cvtColor(np.array(Image.open(io.BytesIO(base64.b64decode(base64_image)))), cv2.COLOR_BGR2RGB)
+	#print(base64_image)
+	face_locations = face_recognition.face_locations(image)
+	#print(face_locations)
+	empty_list = []
+	if len(face_locations) != 0:
+		for b in face_locations:
+			list1 = []
+			length = int(b[2])-int(b[0])
+			breadth = int(b[3])-int(b[1])
+			area = length * breadth
+			#print(area)
+			list1.append(area)
+		max_index = list1.index(max(list1))
+		face_locations = face_locations[max_index]
+		#print(face_locations)
+		empty_list.append(face_locations)
+		top = empty_list[0][0]
+		right = empty_list[0][1]
+		bottom = empty_list[0][2]
+		left = empty_list[0][3]
+		face = image[top:bottom,left:right]
+		#sample_img1 = cv2.resize(image,(64,64))
+		#sample_img2 = cv2.resize(face,(64,64))
+		#res1 = np.hstack((sample_img1,sample_img2))
+		#cv2.imwrite('/home/tgt/Desktop/'+str(time.time())+'.jpg',res1)
+		face = cv2.resize(face, (32, 32))
+		#print(face.shape)
+		face = face.astype("float") / 255.0
+		face = img_to_array(face)
+		face = np.expand_dims(face, axis=0)
+		
+		with graph.as_default():
+			#y = model.predict(X)
+			preds = model.predict(face)[0]
+		j = np.argmax(preds)
+		label = le.classes_[j]
+
+		# draw the label and bounding box on the frame
+		label = "{}: {:.4f}".format(label, preds[j])
+		#print('------------',label)
+		if label.split(':')[0] != "fake":
+			
+			face_encoding = face_recognition.face_encodings(image, empty_list)
+			distances = face_recognition.face_distance(data["encodings"], face_encoding[0])
+			#print('the distances are ----------------------------------------------------------------->',distances)
+			matches = face_recognition.compare_faces(data["encodings"], face_encoding[0],tolerance=0.4)
+			#print(matches)
+			name = "Unknown"
+			if True in matches:
+				#first_match_index = matches.index(True)#name = data["names"][first_match_index]#username=data5["usernames"][first_match_index]
+				matchedIdxs = [i for (i, b) in enumerate(matches) if b]
+				counts = {}
+				for i in matchedIdxs:
+					name = data["names"][i]
+					counts[name] = counts.get(name, 0) + 1
+
+				name = max(counts, key=counts.get)
+				print('the name is--------------------------------------->',name)
+			if name != "Unknown":
+				return name,'matched'
+			else:
+				return name,'notmatched'
+		else:
+			return 'no1','Fake'
+	else:
+		return 'no','Face is not detected in image'
+		
+
+		
+'''def recognizer(base64_image):
+	#time.sleep(0.02)
+	data = pickle.loads(open(keys['encodings'], "rb").read())
+	base64_image=base64_image.split(',')[-1]
+	base64_image=base64_image.replace(" ", "+")
+	image = cv2.cvtColor(np.array(Image.open(io.BytesIO(base64.b64decode(base64_image)))), cv2.COLOR_BGR2RGB)
+	#print(base64_image')
+	rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+	face_locations = face_recognition.face_locations(rgb)
+	encodings=face_recognition.face_encodings(rgb,face_locations)
+	name=[]
+	for encoding in encodings:
+	  #print(encodings)
+	  matches=face_recognition.compare_faces(data["encodings"],encoding)
+	  print(matches)
+	  
+	  
+	  name="unknown"
+	  if True in matches:
+	     matchedIdxs = [i for (i, b) in enumerate(matches) if b]
+	     counts = {}
+             for i in matchedIdxs:
+                 name = data["names"][i]
+	         counts[name] = counts.get(name, 0) + 1
+
+             name = max(counts, key=counts.get)
+	  name.append(name)
+	  for  ((top,right,bottom,left),name) in zip(face_locations,name):
+	           cv2.rectangle(image,(left,top),(right,bottom),(0,255,0),2)
+	           y=top-15 if top -15>15 else top+15
+	           cv2.putText(image,name,(left,y),cv2.FONT_HERSHEY_SIMPLEX,0.75,(0.255,0),2)   '''
+	           
+	  
+		
+            	
